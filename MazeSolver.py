@@ -1,16 +1,16 @@
-
 import random
 
-# this is a function to solve a 'problem' by fulfilling a 'solution'
-# within a certain number of iterations by
-def find_random_plan(start, problem, solution, iterations):
+"""This is a function randomly walks through a maze once
+by taking n steps. It reports the route taken
+and whether the maze was solved."""
+def find_random_plan(start, problem, solution, steps):
     random_plan = []
     situation_sequence = []
     solved = False
 
     current_situation = start
 
-    for p in xrange(1, iterations):
+    for p in xrange(1, steps):
         options = problem.get(current_situation).keys()
         random_choice = random.choice(options)
         if current_situation == solution:
@@ -24,10 +24,11 @@ def find_random_plan(start, problem, solution, iterations):
 
     return random_plan, situation_sequence, solved
 
-
-def find_best_plan(subject, problem, solution):
-
-    iterations = subject["intelligence"] * 10
+"""This is a function reports an optimized route through
+an input maze by repeatedly running through it with
+find_random_plan and then reporting the shortest route
+it found after n iterations."""
+def find_best_plan(iterations, problem, solution):
 
     current_solved_plan = []
     current_solved_situation_sequence = []
@@ -52,18 +53,18 @@ def find_best_plan(subject, problem, solution):
             best_plan = current_solved_plan
             best_situation_sequence = current_solved_situation_sequence
 
-    return best_plan, best_situation_sequence, problem_solved
+    return best_plan, best_situation_sequence, maze_solved
 
-################ start maze_1 problem
-maze = {"start of maze": {"W": "room A"},
-        "room A": {"N": "room B", "E": "start of maze"},
-        "room B": {"W": "room I", "E": "room C"},
-        "room C": {"W": "room B", "N": "room D"},
-        "room D": {"S": "room C", "N": "end of maze"},
-        "room I": {"N": "room J", "E": "room B"},
-        "room J": {"S": "room I"},
-        "end of maze": {"S": "room D"}
-        }
+################ start maze1 problem
+maze1 = {"start of maze": {"W": "room A"},
+         "room A": {"N": "room B", "E": "start of maze"},
+         "room B": {"W": "room I", "E": "room C"},
+         "room C": {"W": "room B", "N": "room D"},
+         "room D": {"S": "room C", "N": "end of maze"},
+         "room I": {"N": "room J", "E": "room B"},
+         "room J": {"S": "room I"},
+         "end of maze": {"S": "room D"}
+         }
 
     #   Maze layout:
     #
@@ -78,31 +79,30 @@ maze = {"start of maze": {"W": "room A"},
     # most direct solution: [W, N, E, N, N]
 
 start = "start of maze"
-problem = maze
+problem = maze1
 solution = "end of maze"
-################ end maze_1 problem
+################ end maze1 problem
 
-mouse = {"intelligence": 20, "plan memory": {}, "plan certainty": {}}
-subject = mouse
+### attempt to solve maze_1 with 1000 tries
+iterations = 1000
+best_plan, best_situation_sequence, problem_solved = find_best_plan(iterations, problem, solution)
 
-best_plan, best_situation_sequence, problem_solved = find_best_plan(subject, problem, solution)
-
-print "The best plan for maze_1 was:", best_plan
+print "The best plan for maze1 was:", best_plan
 print "It involved this sequence:", best_situation_sequence
 print "Was the problem solved?", problem_solved
 
-################ start maze_2 problem
-maze = {"start of maze": {"W": "room A"},
-        "room A": {"N": "room B", "E": "start of maze"},
-        "room B": {"W": "room I", "E": "room C"},
-        "room C": {"W": "room B", "N": "room D", "E": "room K"},
-        "room D": {"S": "room C", "E": "room L"},
-        "room I": {"N": "room J", "E": "room B"},
-        "room J": {"S": "room I"},
-        "room K": {"W": "room C", "N": "room L"},
-        "room L": {"N": "end of maze", "S": "room K", "W": "room D"},
-        "end of maze": {"S": "room D"}
-        }
+################ start maze2 problem
+maze2 = {"start of maze": {"W": "room A"},
+         "room A": {"N": "room B", "E": "start of maze"},
+         "room B": {"W": "room I", "E": "room C"},
+         "room C": {"W": "room B", "N": "room D", "E": "room K"},
+         "room D": {"S": "room C", "E": "room L"},
+         "room I": {"N": "room J", "E": "room B"},
+         "room J": {"S": "room I"},
+         "room K": {"W": "room C", "N": "room L"},
+         "room L": {"N": "end of maze", "S": "room K", "W": "room D"},
+         "end of maze": {"S": "room D"}
+         }
 
     #   Maze layout:
     #
@@ -118,12 +118,13 @@ maze = {"start of maze": {"W": "room A"},
     #                        [W, N, E, N, E, N]
 
 start = "start of maze"
-problem = maze
+problem = maze2
 solution = "end of maze"
-################ end maze_2 problem
+################ end maze2 problem
 
-best_plan, best_situation_sequence, problem_solved = find_best_plan(subject, problem, solution)
+iterations = 1000
+best_plan, best_situation_sequence, problem_solved = find_best_plan(iterations, problem, solution)
 
-print "The best plan for maze_2 was:", best_plan
+print "The best plan for maze2 was:", best_plan
 print "It involved this sequence:", best_situation_sequence
 print "Was the problem solved?", problem_solved
